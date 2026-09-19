@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://taitnhaunt-oss.github.io/buildquantia/sitemap.xml
