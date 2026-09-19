@@ -40,6 +40,15 @@ function runCalc(){
  const key=document.body.dataset.tool,t=TOOLS[key],v={}; if(!t)return;
  t.fields.forEach(f=>v[f[0]]=Number(document.getElementById("i_"+f[0]).value)||0);
  const r=t.calc(v),out=document.getElementById("result");
- out.innerHTML='<div class="eyebrow">ESTIMATE</div><div class="big">'+r.headline+'</div>'+r.rows.map(x=>'<div class="row"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("")+'<p class="muted" style="margin-bottom:0">Estimate only. Verify product coverage, manufacturer specifications, site conditions and local requirements before ordering.</p>';
+ out.innerHTML='<div class="eyebrow">ESTIMATE</div><div class="big">'+r.headline+'</div>'+r.rows.map(x=>'<div class="row"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join("")+'<div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:14px"><button class="btn secondary" type="button" onclick="saveEstimate()">Save estimate</button><button class="btn secondary" type="button" onclick="window.print()">Print</button></div><p class="muted" style="margin-bottom:0">Estimate only. Verify product coverage, manufacturer specifications, site conditions and local requirements before ordering.</p>';
 }
 document.addEventListener("DOMContentLoaded",initCalculator);
+function saveEstimate(){
+ const key=document.body.dataset.tool,t=TOOLS[key],v={};
+ if(!t)return;
+ t.fields.forEach(f=>v[f[0]]=Number(document.getElementById("i_"+f[0]).value)||0);
+ const r=t.calc(v), item={tool:key,name:t.name,inputs:v,result:r,at:new Date().toISOString()};
+ const saved=JSON.parse(localStorage.getItem("buildquantia_estimates")||"[]"); saved.unshift(item);
+ localStorage.setItem("buildquantia_estimates",JSON.stringify(saved.slice(0,20)));
+ alert("Estimate saved on this device.");
+}
